@@ -8,8 +8,9 @@
 - Docker Installation
 - Create services for Docker
 - Wait Function
-- Build App
+- Copy App
 - App Variables
+- Build App
 - Start App
 
 ## Resources
@@ -22,4 +23,6 @@
 - [Ansible IRC Chat](http://irc.freenode.net/)
     - #ansible
     - #yaml
-- [Jake Litwicki 2015 09 03](https://www.jakelitwicki.com/2015/09/03/convert-bash-script-to-ansible-playbook/)
+- [Docker Build](https://docs.docker.com/engine/reference/commandline/build/)
+- [Docker Images with Ansible](https://opensolitude.com/2015/05/26/building-docker-images-with-ansible.html)
+- [Jake Litwicki Bash to Ansible](https://www.jakelitwicki.com/2015/09/03/convert-bash-script-to-ansible-playbook/)

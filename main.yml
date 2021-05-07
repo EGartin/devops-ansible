@@ -3,12 +3,9 @@
   become: true
     # Variable Initialization
   vars:
-    APP_MESSAGE: "HELLO WORLD"
+    APP_MESSAGE: "Testing for Rebuild of Docker Image"
   
   tasks:
-    # debug:
-        #msg: Hello, world
-
     # Docker Installation
     - name: install docker
       yum:
@@ -22,13 +19,15 @@
         dest: /etc/systemd/system/myapp.service
         owner: root
         mode: '0644'
-
+    
+    #Enable myapp in Systemd
     - name: enable myapp service
       ansible.builtin.systemd:
         name: myapp
         enabled: yes
         daemon_reload: yes
 
+    #Start Docker
     - name: start docker
       ansible.builtin.systemd:
         name: docker
@@ -38,14 +37,8 @@
     - name: wait for docker prompt
       ansible.builtin.debug:
         msg: "Waiting for docker to start"
-         
-    #- name: wait for docker
-    #  ansible.builtin.service_facts:
-    #    register: dockerDetails
-    #    until: dockerDetails.ansible_facts.services['docker'].state == 'running'
-    #    retries: 10
-    #    delay: 5
 
+    #Double Checking for Docker to be started? :D :D :D
     - name: wait for docker
       service:
         name: docker
@@ -53,11 +46,6 @@
       become: yes
 
     # Copy App
-    - name: mkdir app
-      ansible.builtin.file:
-        path: /tmp/build_app
-        state: directory
-
     - name: copy app
       ansible.builtin.copy:
         src: ./app
@@ -65,10 +53,6 @@
 
     # App Variables
     - name: update app message
-      #lineinfile:
-      #  path: /tmp/build_app/app/main.py
-      #  search_string: "APP_MESSAGE"
-      #  line: "{{ APP_MESSAGE }}"
       replace:
         path: /tmp/build_app/app/main.py
         backup: yes
@@ -77,15 +61,10 @@
     
     # Build App
     - name: build app
-      docker_image: >
-        name=myapp
-        tag=myapp
-        path=/tmp/build_app/app
-        state=present
+      command: docker build -t myapp /tmp/build_app/app
 
   # Start App
-  handlers:
-    - name: start App
+    - name: start myapp
       service:
         name: myapp
         state: started
