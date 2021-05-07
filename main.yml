@@ -1,8 +1,9 @@
 ###
 - hosts: all
+  become: true
     # Variable Initialization
   vars:
-    APP_MESSAGE: "{{HELLO WORLD}}"
+    APP_MESSAGE: "HELLO WORLD"
   
   tasks:
     # debug:
@@ -10,20 +11,20 @@
 
     # Docker Installation
     - name: install docker
-      ansible.builtin.yum:
+      yum:
         name: docker
         state: latest
 
     # Create services and start Docker
-    - name: copy myapp
+    - name: copy myapp service
       ansible.builtin.copy:
         src: ./myapp.service
         dest: /etc/systemd/system/myapp.service
         owner: root
         mode: '0644'
 
-    - name: enable myapp
-      ansible.builtin.sytemd:
+    - name: enable myapp service
+      ansible.builtin.systemd:
         name: myapp
         enabled: yes
         daemon_reload: yes
@@ -32,25 +33,56 @@
       ansible.builtin.systemd:
         name: docker
         state: started
-        
+
     # Wait Function
     - name: wait for docker prompt
       ansible.builtin.debug:
         msg: "Waiting for docker to start"
          
+    #- name: wait for docker
+    #  ansible.builtin.service_facts:
+    #    register: dockerDetails
+    #    until: dockerDetails.ansible_facts.services['docker'].state == 'running'
+    #    retries: 10
+    #    delay: 5
+
     - name: wait for docker
-      ansible.builtin.service:
+      service:
         name: docker
         state: started
-        register: result
-        until: result.status.state == "running"
-        retries: 15
-        delay: 20
+      become: yes
 
-    # Build App
+    # Copy App
+    - name: mkdir app
+      ansible.builtin.file:
+        path: /tmp/build_app
+        state: directory
+
+    - name: copy app
+      ansible.builtin.copy:
+        src: ./app
+        dest: /tmp/build_app
 
     # App Variables
-  
+    - name: update app message
+      #lineinfile:
+      #  path: /tmp/build_app/app/main.py
+      #  search_string: "APP_MESSAGE"
+      #  line: "{{ APP_MESSAGE }}"
+      replace:
+        path: /tmp/build_app/app/main.py
+        backup: yes
+        regexp: "APP_MESSAGE"
+        replace: "{{ APP_MESSAGE }}"
+    
+    # Build App
+    - name: build app
+      docker_image: >
+        name=myapp
+        tag=myapp
+        path=/tmp/build_app/app
+        state=present
+
   # Start App
   handlers:
     - name: start App

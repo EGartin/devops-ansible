@@ -18,6 +18,7 @@
 - [Ansible Examples Github](https://github.com/ansible/ansible-examples)
 - [Ansible Vagrant Docker Ex](https://github.com/eloycoto/devops_examples)
 - [Ansible Modules](https://docs.ansible.com/ansible-core/2.11/collections/ansible/builtin/index.html#plugins-in-ansible-builtin)
+- [Ansible Docker Guide](https://docs.ansible.com/ansible/latest/scenario_guides/guide_docker.html)
 - [Ansible IRC Chat](http://irc.freenode.net/)
     - #ansible
     - #yaml
