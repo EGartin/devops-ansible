@@ -15,4 +15,10 @@
 ## Resources
 
 - [Ansible Documentation](https://docs.ansible.com/)
+- [Ansible Examples Github](https://github.com/ansible/ansible-examples)
+- [Ansible Vagrant Docker Ex](https://github.com/eloycoto/devops_examples)
+- [Ansible Modules](https://docs.ansible.com/ansible-core/2.11/collections/ansible/builtin/index.html#plugins-in-ansible-builtin)
+- [Ansible IRC Chat](http://irc.freenode.net/)
+    - #ansible
+    - #yaml
 - [Jake Litwicki 2015 09 03](https://www.jakelitwicki.com/2015/09/03/convert-bash-script-to-ansible-playbook/)

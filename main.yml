@@ -1,5 +1,59 @@
----
+###
 - hosts: all
+    # Variable Initialization
+  vars:
+    APP_MESSAGE: "{{HELLO WORLD}}"
+  
   tasks:
-    - debug:
-        msg: Hello, world
+    # debug:
+        #msg: Hello, world
+
+    # Docker Installation
+    - name: install docker
+      ansible.builtin.yum:
+        name: docker
+        state: latest
+
+    # Create services and start Docker
+    - name: copy myapp
+      ansible.builtin.copy:
+        src: ./myapp.service
+        dest: /etc/systemd/system/myapp.service
+        owner: root
+        mode: '0644'
+
+    - name: enable myapp
+      ansible.builtin.sytemd:
+        name: myapp
+        enabled: yes
+        daemon_reload: yes
+
+    - name: start docker
+      ansible.builtin.systemd:
+        name: docker
+        state: started
+        
+    # Wait Function
+    - name: wait for docker prompt
+      ansible.builtin.debug:
+        msg: "Waiting for docker to start"
+         
+    - name: wait for docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+        register: result
+        until: result.status.state == "running"
+        retries: 15
+        delay: 20
+
+    # Build App
+
+    # App Variables
+  
+  # Start App
+  handlers:
+    - name: start App
+      service:
+        name: myapp
+        state: started
