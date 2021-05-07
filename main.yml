@@ -3,7 +3,7 @@
   become: true
     # Variable Initialization
   vars:
-    APP_MESSAGE: "Testing for Rebuild of Docker Image"
+    APP_MESSAGE: "HELLO WORLD"
   
   tasks:
     # Docker Installation
